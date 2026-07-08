@@ -1,6 +1,6 @@
-package org.example.treegrowth.tree;
+package org.example.treegrowthsimulation.tree;
 
-import org.example.treegrowth.math.Vector2;
+import org.example.treegrowthsimulation.math.Vector2;
 
 import java.util.ArrayList;
 import java.util.List;
