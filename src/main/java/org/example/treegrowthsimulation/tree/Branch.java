@@ -27,34 +27,42 @@ public class Branch {
     }
 
     public Vector2 getStart() {
+
         return start;
     }
 
     public Vector2 getDirection() {
+
         return direction;
     }
 
     public double getLength() {
+
         return length;
     }
 
     public double getThickness() {
+
         return thickness;
     }
 
     public Branch getParent() {
+
         return parent;
     }
 
     public List<Branch> getChildren() {
+
         return children;
     }
 
     public void addChild(Branch child) {
+
         children.add(child);
     }
 
     public Vector2 getEnd() {
+
         return start.add(direction.multiply(length));
     }
 }
