@@ -4,8 +4,14 @@ import org.example.treegrowthsimulation.math.Vector2;
 import org.example.treegrowthsimulation.tree.Branch;
 import org.example.treegrowthsimulation.tree.Tree;
 
-public class GrowthEngine{
+import java.util.ArrayList;
+import java.util.List;
+
+public class GrowthEngine {
+
     public void update(Tree tree) {
+
+        List<Branch> nextGrowingTips = new ArrayList<>();
 
         for (Branch branch : tree.getGrowingTips()) {
 
@@ -22,9 +28,13 @@ public class GrowthEngine{
                     thickness,
                     parent
             );
+
             parent.addChild(newBranch);
             tree.getBranches().add(newBranch);
-
+            nextGrowingTips.add(newBranch);
         }
+
+        tree.getGrowingTips().clear();
+        tree.getGrowingTips().addAll(nextGrowingTips);
     }
 }
