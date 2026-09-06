@@ -6,8 +6,11 @@ import org.example.treegrowthsimulation.tree.Tree;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class GrowthEngine {
+
+    private final Random random = new Random();
 
     public void update(Tree tree) {
 
@@ -15,23 +18,57 @@ public class GrowthEngine {
 
         for (Branch branch : tree.getGrowingTips()) {
 
-            Vector2 start = branch.getEnd();
-            Vector2 direction = branch.getDirection();
-            double length = tree.getSpecies().getSegmentLength();
-            double thickness = branch.getThickness();
-            Branch parent = branch;
+            if (branch.getDepth() >= 12) {
+                continue;
+            }
 
-            Branch newBranch = new Branch(
+            Vector2 start = branch.getEnd();
+
+            double baseLength = tree.getSpecies().getSegmentLength();
+            double length = baseLength * Math.pow(0.95, branch.getDepth());
+            double thickness = branch.getThickness() * 0.89;
+
+            // Slightly change the continuation direction
+            double continuationAngle = random.nextDouble(-8, 9);
+            Vector2 continuationDirection =
+                    branch.getDirection().rotate(continuationAngle);
+
+            Branch continuation = new Branch(
                     start,
-                    direction,
+                    continuationDirection,
                     length,
                     thickness,
-                    parent
+                    branch,
+                    branch.getDepth() + 1
             );
 
-            parent.addChild(newBranch);
-            tree.getBranches().add(newBranch);
-            nextGrowingTips.add(newBranch);
+            branch.addChild(continuation);
+            tree.getBranches().add(continuation);
+            nextGrowingTips.add(continuation);
+
+            // Sometimes create a side branch
+            double branchingProbability =
+                    tree.getSpecies().getBranchingProbability()
+                            * Math.pow(0.85, branch.getDepth());
+            if (random.nextDouble() < branchingProbability) {
+
+                double sideAngle = random.nextDouble(-50, 51);
+                Vector2 sideDirection =
+                        branch.getDirection().rotate(sideAngle);
+
+                Branch sideBranch = new Branch(
+                        start,
+                        sideDirection,
+                        length,
+                        thickness,
+                        branch,
+                        branch.getDepth() + 1
+                );
+
+                branch.addChild(sideBranch);
+                tree.getBranches().add(sideBranch);
+                nextGrowingTips.add(sideBranch);
+            }
         }
 
         tree.getGrowingTips().clear();

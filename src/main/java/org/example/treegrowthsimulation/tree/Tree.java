@@ -27,7 +27,8 @@ public class Tree {
                 new Vector2(0, -1),
                 species.getSegmentLength(),
                 species.getInitialThickness(),
-                null
+                null,
+                0
         );
 
         this.branches.add(trunk);

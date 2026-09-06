@@ -43,4 +43,17 @@ public class Vector2 {
 
         return new Vector2(x / len, y / len);
     }
+
+    public Vector2 rotate(double degrees) {
+
+        double radians = Math.toRadians(degrees);
+
+        double cos = Math.cos(radians);
+        double sin = Math.sin(radians);
+
+        double newX = x * cos - y * sin;
+        double newY = x * sin + y * cos;
+
+        return new Vector2(newX, newY);
+    }
 }

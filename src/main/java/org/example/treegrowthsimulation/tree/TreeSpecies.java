@@ -3,19 +3,27 @@ package org.example.treegrowthsimulation.tree;
 public enum TreeSpecies {
 
     OAK(
-            200,
+            20,
             10,
-            0.65
+            0.65,
+            0.35
     );
 
     private final double segmentLength;
     private final double initialThickness;
     private final double lightAttraction;
+    private final double branchingProbability;
 
-    TreeSpecies(double segmentLength, double initialThickness, double lightAttraction) {
+    TreeSpecies(
+            double segmentLength,
+            double initialThickness,
+            double lightAttraction,
+            double branchingProbability
+    ) {
         this.segmentLength = segmentLength;
         this.initialThickness = initialThickness;
         this.lightAttraction = lightAttraction;
+        this.branchingProbability = branchingProbability;
     }
 
     public double getSegmentLength() {
@@ -29,4 +37,6 @@ public enum TreeSpecies {
     public double getLightAttraction() {
         return lightAttraction;
     }
+
+    public double getBranchingProbability() {return branchingProbability;}
 }

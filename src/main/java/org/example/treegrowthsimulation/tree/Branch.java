@@ -16,14 +16,23 @@ public class Branch {
     private final Branch parent;
 
     private final List<Branch> children;
+    private final int depth;
 
-    public Branch(Vector2 start, Vector2 direction, double length, double thickness, Branch parent) {
+    public Branch(
+            Vector2 start,
+            Vector2 direction,
+            double length,
+            double thickness,
+            Branch parent,
+            int depth
+    ) {
         this.start = start;
         this.direction = direction;
         this.length = length;
         this.thickness = thickness;
         this.parent = parent;
         this.children = new ArrayList<>();
+        this.depth = depth;
     }
 
     public Vector2 getStart() {
@@ -64,5 +73,9 @@ public class Branch {
     public Vector2 getEnd() {
 
         return start.add(direction.multiply(length));
+    }
+
+    public int getDepth() {
+        return depth;
     }
 }
