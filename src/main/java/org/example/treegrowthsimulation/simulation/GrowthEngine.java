@@ -16,9 +16,14 @@ public class GrowthEngine {
 
         List<Branch> nextGrowingTips = new ArrayList<>();
 
+        long trunkLength = tree.getBranches().stream().filter(it -> it.getOg() == tree.getTrunk())
+                .count();
+
+        System.out.println("trunk length: " + trunkLength);
+
         for (Branch branch : tree.getGrowingTips()) {
 
-            if (branch.getDepth() >= 12) {
+            if (branch.getDepth() >= 50) {
                 continue;
             }
 
@@ -42,17 +47,26 @@ public class GrowthEngine {
                     branch.getDepth() + 1
             );
 
-            branch.addChild(continuation);
+            var branchOg = branch.getOg() != null ?  branch.getOg() : branch;
+            if (branchOg.getDepth() > 40) continue;
+
+            continuation.setOg(branchOg);
+
+            boolean isTrunkNotMinor = branchOg != tree.getTrunk() ||
+                        trunkLength > 5;
+
             tree.getBranches().add(continuation);
+            branch.addChild(continuation);
             nextGrowingTips.add(continuation);
 
             // Sometimes create a side branch
             double branchingProbability =
                     tree.getSpecies().getBranchingProbability()
-                            * Math.pow(0.85, branch.getDepth());
-            if (random.nextDouble() < branchingProbability) {
+                            * Math.pow(0.922, branch.getDepth());
 
-                double sideAngle = random.nextDouble(-50, 51);
+            if (random.nextDouble() < 0.3 && isTrunkNotMinor) {
+
+                double sideAngle = 10 + (random.nextBoolean() ? -1 : 1) * (40 * random.nextDouble());
                 Vector2 sideDirection =
                         branch.getDirection().rotate(sideAngle);
 
@@ -65,6 +79,7 @@ public class GrowthEngine {
                         branch.getDepth() + 1
                 );
 
+                sideBranch.setOg(sideBranch);
                 branch.addChild(sideBranch);
                 tree.getBranches().add(sideBranch);
                 nextGrowingTips.add(sideBranch);

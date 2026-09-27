@@ -34,7 +34,7 @@ public class HelloApplication extends Application {
         renderer.render(tree, gc);
 
         Timeline timeline = new Timeline(
-                new KeyFrame(Duration.millis(200), event -> {
+                new KeyFrame(Duration.millis(60), event -> {
 
                     gc.clearRect(
                             0,

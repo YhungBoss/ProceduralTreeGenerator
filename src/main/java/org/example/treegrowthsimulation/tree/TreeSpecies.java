@@ -4,7 +4,7 @@ public enum TreeSpecies {
 
     OAK(
             20,
-            10,
+            40,
             0.65,
             0.35
     );

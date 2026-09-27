@@ -14,6 +14,7 @@ public class Branch {
     private final double thickness;
 
     private final Branch parent;
+    private Branch ogParent;
 
     private final List<Branch> children;
     private final int depth;
@@ -63,6 +64,16 @@ public class Branch {
     public List<Branch> getChildren() {
 
         return children;
+    }
+
+    public Branch getOg() {
+
+        return ogParent;
+    }
+
+    public void setOg(Branch og) {
+
+        ogParent = og;
     }
 
     public void addChild(Branch child) {
