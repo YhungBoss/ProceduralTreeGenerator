@@ -5,6 +5,8 @@ import javafx.scene.paint.Color;
 import org.example.treegrowthsimulation.math.Vector2;
 import org.example.treegrowthsimulation.tree.Branch;
 import org.example.treegrowthsimulation.tree.Tree;
+import org.example.treegrowthsimulation.tree.Leaf;
+import javafx.scene.paint.Color;
 
 public class TreeRenderer {
 
@@ -25,6 +27,32 @@ public class TreeRenderer {
                     end.getX(),
                     end.getY()
             );
+        }
+
+        for (Branch branch : tree.getBranches()) {
+
+            Leaf leaf = branch.getLeaf();
+
+            if (leaf != null) {
+                double x = leaf.getPosition().getX();
+                double y = leaf.getPosition().getY();
+                double size = leaf.getSize();
+
+                gc.save();
+
+                gc.translate(x, y);
+                gc.rotate(leaf.getAngle());
+
+                gc.setFill(Color.FORESTGREEN);
+                gc.fillOval(
+                        -size / 2,
+                        -size / 4,
+                        size,
+                        size / 2
+                );
+
+                gc.restore();
+            }
         }
     }
 }

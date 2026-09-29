@@ -44,6 +44,10 @@ public class Vector2 {
         return new Vector2(x / len, y / len);
     }
 
+    public double angle() {
+        return Math.toDegrees(Math.atan2(y, x));
+    }
+
     public Vector2 rotate(double degrees) {
 
         double radians = Math.toRadians(degrees);

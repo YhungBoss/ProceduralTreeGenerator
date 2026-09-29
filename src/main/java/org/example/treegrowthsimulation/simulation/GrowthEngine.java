@@ -3,6 +3,7 @@ package org.example.treegrowthsimulation.simulation;
 import org.example.treegrowthsimulation.math.Vector2;
 import org.example.treegrowthsimulation.tree.Branch;
 import org.example.treegrowthsimulation.tree.Tree;
+import org.example.treegrowthsimulation.tree.Leaf;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,7 @@ public class GrowthEngine {
 
         for (Branch branch : tree.getGrowingTips()) {
 
-            if (branch.getDepth() >= 70) {
+            if (branch.getDepth() >= 40) {
                 continue;
             }
 
@@ -66,10 +67,19 @@ public class GrowthEngine {
                     length,
                     thickness,
                     branch,
-                    branch.getDepth() + 1
+                    branch.getDepth() + 1,
+                    branch.getActualDepth()
             );
 
             continuation.setOg(branchOg);
+
+            continuation.setLeaf(
+                    new Leaf(
+                            continuation.getEnd(),
+                            4,
+                            continuationDirection.angle()
+                    )
+            );
 
             boolean isTrunkNotMinor =
                     branchOg != tree.getTrunk() || trunkLength > 12;
@@ -83,7 +93,7 @@ public class GrowthEngine {
                             * Math.pow(0.998, branch.getDepth());
 
             if (random.nextDouble() < branchingProbability
-                    && isTrunkNotMinor) {
+                    && isTrunkNotMinor && branch.getActualDepth() < 5) {
 
                 double sideAngle = 65 + random.nextDouble(0, 50);
 
@@ -117,10 +127,19 @@ public class GrowthEngine {
                         length,
                         thickness,
                         branch,
-                        branch.getDepth() + 1
+                        branch.getDepth() + 1,
+                        branch.getActualDepth() + 1
                 );
 
                 sideBranch.setOg(sideBranch);
+
+                sideBranch.setLeaf(
+                        new Leaf(
+                                sideBranch.getEnd(),
+                                4,
+                                sideDirection.angle()
+                        )
+                );
 
                 branch.addChild(sideBranch);
                 tree.getBranches().add(sideBranch);

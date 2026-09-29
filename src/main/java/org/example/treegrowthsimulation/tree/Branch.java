@@ -18,6 +18,9 @@ public class Branch {
 
     private final List<Branch> children;
     private final int depth;
+    private final int actualDepth;
+
+    private Leaf leaf;
 
     public Branch(
             Vector2 start,
@@ -25,7 +28,8 @@ public class Branch {
             double length,
             double thickness,
             Branch parent,
-            int depth
+            int depth,
+            int actualDepth
     ) {
         this.start = start;
         this.direction = direction;
@@ -34,6 +38,7 @@ public class Branch {
         this.parent = parent;
         this.children = new ArrayList<>();
         this.depth = depth;
+        this.actualDepth = actualDepth;
     }
 
     public Vector2 getStart() {
@@ -44,6 +49,11 @@ public class Branch {
     public Vector2 getDirection() {
 
         return direction;
+    }
+
+    public int getActualDepth() {
+
+        return actualDepth;
     }
 
     public double getLength() {
@@ -85,8 +95,16 @@ public class Branch {
 
         return start.add(direction.multiply(length));
     }
+    public Leaf getLeaf() {
+        return leaf;
+    }
+
+    public void setLeaf(Leaf leaf) {
+        this.leaf = leaf;
+    }
 
     public int getDepth() {
         return depth;
     }
 }
+

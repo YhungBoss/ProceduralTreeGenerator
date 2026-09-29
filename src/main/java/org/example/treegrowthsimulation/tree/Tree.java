@@ -28,6 +28,7 @@ public class Tree {
                 species.getSegmentLength(),
                 species.getInitialThickness(),
                 null,
+                0,
                 0
         );
 
