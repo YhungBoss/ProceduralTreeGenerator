@@ -16,14 +16,15 @@ public class GrowthEngine {
 
         List<Branch> nextGrowingTips = new ArrayList<>();
 
-        long trunkLength = tree.getBranches().stream().filter(it -> it.getOg() == tree.getTrunk())
+        long trunkLength = tree.getBranches().stream()
+                .filter(it -> it.getOg() == tree.getTrunk())
                 .count();
 
         System.out.println("trunk length: " + trunkLength);
 
         for (Branch branch : tree.getGrowingTips()) {
 
-            if (branch.getDepth() >= 50) {
+            if (branch.getDepth() >= 70) {
                 continue;
             }
 
@@ -33,10 +34,31 @@ public class GrowthEngine {
             double length = baseLength * Math.pow(0.95, branch.getDepth());
             double thickness = branch.getThickness() * 0.89;
 
-            // Slightly change the continuation direction
-            double continuationAngle = random.nextDouble(-8, 9);
+            var branchOg = branch.getOg() != null
+                    ? branch.getOg()
+                    : branch;
+
+            double continuationAngle;
+
+            if (branchOg == tree.getTrunk()) {
+                // Trunk stays mostly vertical
+                continuationAngle = random.nextDouble(-8, 8);
+            } else {
+                // Smaller branches are allowed to curve more sideways
+                continuationAngle = random.nextDouble(-25, 25);
+            }
+
             Vector2 continuationDirection =
-                    branch.getDirection().rotate(continuationAngle);
+                    branch.getDirection()
+                            .rotate(continuationAngle)
+                            .normalize();
+
+            if (continuationDirection.getY() > 0) {
+                continuationDirection = new Vector2(
+                        continuationDirection.getX(),
+                        -Math.abs(continuationDirection.getY())
+                ).normalize();
+            }
 
             Branch continuation = new Branch(
                     start,
@@ -47,28 +69,47 @@ public class GrowthEngine {
                     branch.getDepth() + 1
             );
 
-            var branchOg = branch.getOg() != null ?  branch.getOg() : branch;
-            if (branchOg.getDepth() > 40) continue;
-
             continuation.setOg(branchOg);
 
-            boolean isTrunkNotMinor = branchOg != tree.getTrunk() ||
-                        trunkLength > 5;
+            boolean isTrunkNotMinor =
+                    branchOg != tree.getTrunk() || trunkLength > 12;
 
             tree.getBranches().add(continuation);
             branch.addChild(continuation);
             nextGrowingTips.add(continuation);
 
-            // Sometimes create a side branch
             double branchingProbability =
                     tree.getSpecies().getBranchingProbability()
-                            * Math.pow(0.922, branch.getDepth());
+                            * Math.pow(0.998, branch.getDepth());
 
-            if (random.nextDouble() < 0.3 && isTrunkNotMinor) {
+            if (random.nextDouble() < branchingProbability
+                    && isTrunkNotMinor) {
 
-                double sideAngle = 10 + (random.nextBoolean() ? -1 : 1) * (40 * random.nextDouble());
+                double sideAngle = 65 + random.nextDouble(0, 50);
+
+                if (random.nextBoolean()) {
+                    sideAngle = -sideAngle;
+                }
+
+                // Randomly choose left or right
+                if (random.nextBoolean()) {
+                    sideAngle = -sideAngle;
+                }
+
                 Vector2 sideDirection =
-                        branch.getDirection().rotate(sideAngle);
+                        branch.getDirection()
+                                .rotate(sideAngle)
+                                .normalize();
+
+                /*
+                 * Prevent downward-growing side branches.
+                 */
+                if (sideDirection.getY() > 0) {
+                    sideDirection = new Vector2(
+                            sideDirection.getX(),
+                            -Math.abs(sideDirection.getY())
+                    ).normalize();
+                }
 
                 Branch sideBranch = new Branch(
                         start,
@@ -80,6 +121,7 @@ public class GrowthEngine {
                 );
 
                 sideBranch.setOg(sideBranch);
+
                 branch.addChild(sideBranch);
                 tree.getBranches().add(sideBranch);
                 nextGrowingTips.add(sideBranch);
